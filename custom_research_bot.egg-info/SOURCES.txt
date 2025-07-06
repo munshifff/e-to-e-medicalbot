@@ -1,0 +1,9 @@
+README.md
+setup.py
+custom_research_bot.egg-info/PKG-INFO
+custom_research_bot.egg-info/SOURCES.txt
+custom_research_bot.egg-info/dependency_links.txt
+custom_research_bot.egg-info/top_level.txt
+src/__init__.py
+src/helpers.py
+src/prompt.py

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediBot - Your Medical Assistant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+    <!-- Sidebar with chat history -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>MediBot</h2>
+            <button class="new-chat-btn" id="newChatBtn">
+                <i class="fas fa-plus"></i> New
+            </button>
+        </div>
+        <div class="chat-history" id="chatHistory">
+            <!-- Chat history items will be added here dynamically -->
+            <div class="chat-item active">
+                <span class="chat-item-title">Current symptoms check</span>
+                <span class="chat-item-date">Today</span>
+                <i class="fas fa-trash delete-chat"></i>
+            </div>
+            <div class="chat-item">
+                <span class="chat-item-title">Allergy consultation</span>
+                <span class="chat-item-date">Yesterday</span>
+                <i class="fas fa-trash delete-chat"></i>
+            </div>
+            <div class="chat-item">
+                <span class="chat-item-title">Medication questions</span>
+                <span class="chat-item-date">Jul 3</span>
+                <i class="fas fa-trash delete-chat"></i>
+            </div>
+            <div class="chat-item">
+                <span class="chat-item-title">Headache consultation</span>
+                <span class="chat-item-date">Jun 28</span>
+                <i class="fas fa-trash delete-chat"></i>
+            </div>
+        </div>
+        <div class="sidebar-footer">
+            <div class="user-profile">
+                <div class="user-avatar">JD</div>
+                <span class="user-name">John Doe</span>
+                <i class="fas fa-cog" style="color: #6c757d; cursor: pointer;"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main chat area -->
+    <div class="main-content">
+        <div class="chat-header">
+            <div class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="chat-title">Current symptoms check</div>
+        </div>
+        
+        <div class="chat-container" id="chatContainer">
+            <!-- Quick action buttons -->
+            <div class="quick-actions">
+                <button class="quick-action-btn">Common symptoms</button>
+                <button class="quick-action-btn">Medication info</button>
+                <button class="quick-action-btn">Find doctors</button>
+                <button class="quick-action-btn">First aid</button>
+            </div>
+            
+            <!-- Chat messages will be added here dynamically -->
+            <div class="message bot-message">
+                <div class="message-row">
+                    <div class="bot-avatar">MB</div>
+                    <div class="message-content">
+                        Hello! I'm MediBot, your AI medical assistant. How can I help you today?
+                        <div class="message-time">10:02 AM</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="message user-message">
+                <div class="message-content">
+                    I've been having headaches and nausea for the past 2 days.
+                    <div class="message-time">10:03 AM</div>
+                </div>
+            </div>
+            
+            <div class="message bot-message">
+                <div class="message-row">
+                    <div class="bot-avatar">MB</div>
+                    <div class="message-content">
+                        I'm sorry to hear that. Let me ask you a few questions to better understand your symptoms.
+                        <div class="symptoms-list">
+                            <div class="symptom-tag">Headache <i class="fas fa-times"></i></div>
+                            <div class="symptom-tag">Nausea <i class="fas fa-times"></i></div>
+                        </div>
+                        <div class="message-time">10:03 AM</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="message bot-message">
+                <div class="message-row">
+                    <div class="bot-avatar">MB</div>
+                    <div class="message-content">
+                        <div class="medical-info-card">
+                            <h4>Headache Information</h4>
+                            <p>Headaches can have various causes, including tension, migraines, or other underlying conditions.</p>
+                            <p><strong>Common causes:</strong></p>
+                            <ul>
+                                <li>Tension or stress</li>
+                                <li>Dehydration</li>
+                                <li>Eye strain</li>
+                                <li>Sinus congestion</li>
+                            </ul>
+                        </div>
+                        <div class="message-time">10:04 AM</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="message bot-message">
+                <div class="message-row">
+                    <div class="bot-avatar">MB</div>
+                    <div class="message-content">
+                        On a scale of 1 to 10, how severe is your headache?
+                        <div class="message-time">10:04 AM</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="typing-indicator">
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            </div>
+        </div>
+        
+        <div class="input-area">
+            <i class="fas fa-paperclip attachment-btn"></i>
+            <textarea class="message-input" id="messageInput" placeholder="Type your message here..." rows="1"></textarea>
+            <button class="send-btn" id="sendBtn">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+    // Toggle sidebar on mobile
+    document.getElementById('menuToggle').addEventListener('click', function() {
+        document.getElementById('sidebar').classList.toggle('open');
+    });
+    
+    // Auto-resize textarea
+    const messageInput = document.getElementById('messageInput');
+    messageInput.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = (this.scrollHeight) + 'px';
+    });
+    
+    // Send message on Enter key (but allow Shift+Enter for new lines)
+    messageInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
+    
+    // Send message when send button is clicked
+    document.getElementById('sendBtn').addEventListener('click', sendMessage);
+    
+    // New chat button
+    document.getElementById('newChatBtn').addEventListener('click', function() {
+        // Clear chat container and start fresh
+        document.getElementById('chatContainer').innerHTML = `
+            <div class="quick-actions">
+                <button class="quick-action-btn">Common symptoms</button>
+                <button class="quick-action-btn">Medication info</button>
+                <button class="quick-action-btn">Find doctors</button>
+                <button class="quick-action-btn">First aid</button>
+            </div>
+        `;
+        addMessage("Hello! I'm MediBot, your AI medical assistant. How can I help you today?", 'bot');
+        
+        // Add to chat history
+        const now = new Date();
+        const dateString = now.toLocaleDateString([], { month: 'short', day: 'numeric' });
+        const chatHistory = document.getElementById('chatHistory');
+        const newChatItem = document.createElement('div');
+        newChatItem.className = 'chat-item active';
+        newChatItem.innerHTML = `
+            <span class="chat-item-title">New conversation</span>
+            <span class="chat-item-date">${dateString}</span>
+            <i class="fas fa-trash delete-chat"></i>
+        `;
+        chatHistory.insertBefore(newChatItem, chatHistory.firstChild);
+        
+        // Set all other chats as inactive
+        document.querySelectorAll('.chat-item').forEach(item => {
+            item.classList.remove('active');
+        });
+        newChatItem.classList.add('active');
+    });
+    
+    // Function to send a message to the backend
+    async function sendMessage() {
+        const message = messageInput.value.trim();
+        if (message) {
+            // Add user message to chat
+            addMessage(message, 'user');
+            
+            // Clear input
+            messageInput.value = '';
+            messageInput.style.height = 'auto';
+            
+            // Show typing indicator
+            showTypingIndicator();
+            
+            try {
+                // Send message to backend
+                const formData = new FormData();
+                formData.append('msg', message);
+                
+                const response = await fetch('/get', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                
+                const botResponse = await response.text();
+                
+                // Remove typing indicator and add bot response
+                removeTypingIndicator();
+                addMessage(botResponse, 'bot');
+                
+            } catch (error) {
+                console.error('Error:', error);
+                removeTypingIndicator();
+                addMessage("Sorry, I'm having trouble connecting to the server. Please try again later.", 'bot');
+            }
+        }
+    }
+    
+    // Function to show typing indicator
+    function showTypingIndicator() {
+        const chatContainer = document.getElementById('chatContainer');
+        const typingDiv = document.createElement('div');
+        typingDiv.className = 'typing-indicator';
+        typingDiv.innerHTML = `
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+        `;
+        chatContainer.appendChild(typingDiv);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+    
+    // Function to remove typing indicator
+    function removeTypingIndicator() {
+        const typingIndicator = document.querySelector('.typing-indicator');
+        if (typingIndicator) {
+            typingIndicator.remove();
+        }
+    }
+    
+    // Function to add a message to the chat
+    function addMessage(content, sender) {
+        const chatContainer = document.getElementById('chatContainer');
+        
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${sender}-message`;
+        
+        const now = new Date();
+        const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        
+        if (sender === 'user') {
+            messageDiv.innerHTML = `
+                <div class="message-content">
+                    ${content}
+                    <div class="message-time">${timeString}</div>
+                </div>
+            `;
+        } else {
+            messageDiv.innerHTML = `
+                <div class="message-row">
+                    <div class="bot-avatar">MB</div>
+                    <div class="message-content">
+                        ${content}
+                        <div class="message-time">${timeString}</div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        chatContainer.appendChild(messageDiv);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+    
+    // Add click handlers to chat history items
+    document.querySelectorAll('.chat-item').forEach(item => {
+        item.addEventListener('click', function() {
+            document.querySelectorAll('.chat-item').forEach(i => i.classList.remove('active'));
+            this.classList.add('active');
+            // In a real app, this would load the selected chat
+        });
+    });
+    
+    // Initialize with welcome message
+    window.onload = function() {
+        addMessage("Hello! I'm MediBot, your AI medical assistant. How can I help you today?", 'bot');
+    };
+</script>
+</body>
+</html>
